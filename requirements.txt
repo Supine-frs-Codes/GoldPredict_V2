@@ -1,0 +1,86 @@
+# GoldPredict V2.0 - Core Dependencies
+# Generated from pyproject.toml for pip compatibility
+
+# Core data processing
+pandas>=2.0.0
+numpy>=1.24.0
+scipy>=1.10.0
+
+# Data acquisition and sources
+yfinance>=0.2.0
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+alpha-vantage>=2.3.0
+metatrader5>=5.0.5120
+
+# Machine Learning (Core)
+scikit-learn>=1.3.0
+xgboost>=1.7.0
+lightgbm>=4.0.0
+
+# Technical Analysis
+finta>=1.3.0
+
+# Visualization and Charts
+matplotlib>=3.7.0
+seaborn>=0.12.0
+plotly>=5.15.0
+
+# Web Framework and API
+flask>=2.3.0
+flask-socketio>=5.3.0
+fastapi>=0.100.0
+uvicorn>=0.22.0
+
+# Database and Storage
+sqlalchemy>=2.0.0
+
+# Utilities and Tools
+tqdm>=4.65.0
+joblib>=1.3.0
+python-dotenv>=1.0.0
+pyyaml>=6.0.0
+click>=8.1.0
+psutil>=5.9.0
+python-dateutil>=2.8.0
+
+# WeChat Integration (Ver 2.0 Feature)
+watchdog>=3.0.0
+wxauto>=39.1.14
+
+# Enhanced Web Interface (Ver 2.0 Feature)
+jinja2>=3.1.0
+werkzeug>=2.3.0
+
+# Optional: Deep Learning Support
+# Uncomment the following lines if you want AI enhanced features
+# torch>=2.5.0
+# torchvision>=0.20.0
+# torchaudio>=2.5.0
+# transformers>=4.40.0
+# stable-baselines3>=2.0.0
+# gymnasium>=0.28.0
+
+# Optional: Advanced Technical Analysis
+# Uncomment the following lines for advanced TA features
+# ta-lib>=0.6.4
+# catboost>=1.2.0
+
+# Optional: Advanced Visualization
+# Uncomment the following lines for advanced visualization
+# dash>=2.10.0
+# streamlit>=1.25.0
+
+# Optional: GPU Acceleration
+# Uncomment the following lines for GPU support
+# cupy-cuda11x>=12.0.0
+# numba>=0.58.0
+
+# Optional: Development Tools
+# Uncomment the following lines for development
+# pytest>=7.0.0
+# pytest-cov>=4.0.0
+# black>=23.0.0
+# flake8>=6.0.0
+# mypy>=1.0.0
+# pre-commit>=3.0.0

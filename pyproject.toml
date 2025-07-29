@@ -1,0 +1,211 @@
+[project]
+name = "goldpredict"
+version = "2.0.0"
+description = "Advanced Gold Price Prediction System with AI, Traditional ML, Auto Trading and WeChat Integration"
+readme = "README_V2.md"
+requires-python = ">=3.10"
+authors = [
+    {name = "GoldPredict Team", email = "goldpredict@example.com"}
+]
+license = {text = "MIT"}
+keywords = ["gold", "prediction", "trading", "ai", "machine-learning", "mt5", "wechat"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    # Core data processing
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+    "scipy>=1.10.0",
+    # Data acquisition and sources
+    "yfinance>=0.2.0",
+    "requests>=2.31.0",
+    "beautifulsoup4>=4.12.0",
+    "alpha-vantage>=2.3.0",
+    "metatrader5>=5.0.5120",
+    # Machine Learning (Core)
+    "scikit-learn>=1.3.0",
+    "xgboost>=1.7.0",
+    "lightgbm>=4.0.0",
+    # Technical Analysis
+    "finta>=1.3.0",
+    # Visualization and Charts
+    "matplotlib>=3.7.0",
+    "seaborn>=0.12.0",
+    "plotly>=5.15.0",
+    # Web Framework and API
+    "flask>=2.3.0",
+    "flask-socketio>=5.3.0",
+    "fastapi>=0.100.0",
+    "uvicorn>=0.22.0",
+    # Database and Storage
+    "sqlalchemy>=2.0.0",
+    # Utilities and Tools
+    "tqdm>=4.65.0",
+    "joblib>=1.3.0",
+    "python-dotenv>=1.0.0",
+    "pyyaml>=6.0.0",
+    "click>=8.1.0",
+    "psutil>=5.9.0",
+    "python-dateutil>=2.8.0",
+    # WeChat Integration (Ver 2.0 Feature)
+    "watchdog>=3.0.0",
+    "wxauto>=39.1.14",
+    # Auto Trading System (Ver 2.0 Feature)
+    # 注意: threading, queue, json, datetime, time, logging 是Python内置模块，不需要安装
+    # Enhanced Web Interface (Ver 2.0 Feature)
+    "jinja2>=3.1.0",
+    "werkzeug>=2.3.0",
+    "ta-lib>=0.6.4",
+    "textblob>=0.19.0",
+]
+
+[project.optional-dependencies]
+# Deep Learning Support (Optional)
+deep-learning = [
+    "torch>=2.5.0",
+    "torchvision>=0.20.0",
+    "torchaudio>=2.5.0",
+    "transformers>=4.40.0",
+    "stable-baselines3>=2.0.0",
+    "gymnasium>=0.28.0",
+]
+
+# Advanced Technical Analysis (Optional)
+advanced-ta = [
+    "ta-lib>=0.6.4",
+    "catboost>=1.2.0",
+]
+
+# Advanced Visualization (Optional)
+advanced-viz = [
+    "dash>=2.10.0",
+    "streamlit>=1.25.0",
+]
+
+# GPU Acceleration (Optional)
+gpu = [
+    "cupy-cuda11x>=12.0.0",
+    "numba>=0.58.0",
+]
+
+# Development Tools (Optional)
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+    "mypy>=1.0.0",
+    "pre-commit>=3.0.0",
+]
+
+# All optional dependencies
+all = [
+    "goldpredict[deep-learning,advanced-ta,advanced-viz,gpu,dev]",
+]
+
+[project.scripts]
+goldpredict = "goldpredict.main:main"
+goldpredict-unified = "unified_prediction_platform_fixed_ver2:main"
+goldpredict-traditional = "traditional_ml_system_ver2:main"
+goldpredict-auto-trading = "auto_trading_system:main"
+goldpredict-wechat = "wechat_sender:main"
+
+[project.urls]
+Homepage = "https://github.com/goldpredict/goldpredict"
+Documentation = "https://goldpredict.readthedocs.io/"
+Repository = "https://github.com/goldpredict/goldpredict.git"
+Issues = "https://github.com/goldpredict/goldpredict/issues"
+Changelog = "https://github.com/goldpredict/goldpredict/blob/main/CHANGELOG.md"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+include = [
+    "*.py",
+    "config/",
+    "templates/",
+    "static/",
+    "README_V2.md",
+    "requirements.txt"
+]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+    "mypy>=1.0.0",
+    "pre-commit>=3.0.0",
+    "jupyter>=1.0.0",
+    "ipykernel>=6.0.0",
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py310']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--cov=goldpredict",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-report=xml",
+]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "MetaTrader5.*",
+    "wxauto.*",
+    "ta.*",
+    "finta.*",
+    "alpha_vantage.*",
+]
+ignore_missing_imports = true

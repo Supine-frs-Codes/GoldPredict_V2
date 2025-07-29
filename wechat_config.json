@@ -1,0 +1,16 @@
+{
+  "target_groups": [],
+  "message_template": {
+    "title": "🏆 黄金价格预测报告",
+    "format": "📊 **黄金价格预测更新**\n\n🕐 时间: {timestamp}\n💰 当前价格: ${current_price:.2f}\n🎯 预测价格: ${predicted_price:.2f}\n📈 价格变化: {price_change:+.2f} ({price_change_pct:+.2f}%)\n🔮 交易信号: {signal}\n📊 置信度: {confidence:.1%}\n\n⚡ 预测方法: {method}\n🎯 目标时间: {target_time}\n\n---\n💡 此预测仅供参考，投资有风险，请谨慎决策！"
+  },
+  "send_conditions": {
+    "min_confidence": 0.3,
+    "min_price_change_pct": 0.1,
+    "cooldown_minutes": 5
+  },
+  "retry_settings": {
+    "max_retries": 3,
+    "retry_delay": 5
+  }
+}

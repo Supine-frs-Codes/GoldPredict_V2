@@ -1,0 +1,28 @@
+{
+  "monitoring": {
+    "file_paths": [
+      "results/realtime/latest_prediction.json",
+      "results/predictions/web_simple_prediction.json",
+      "results/predictions/improved_predictions.json"
+    ],
+    "api_endpoints": [
+      "http://localhost:5000/api/prediction/latest",
+      "http://localhost:5000/api/prediction/realtime",
+      "http://localhost:5000/api/prediction/ai_enhanced",
+      "http://localhost:5000/api/prediction/traditional",
+      "http://localhost:5000/api/prediction/auto_trading"
+    ],
+    "check_interval_seconds": 30,
+    "enable_file_monitoring": true,
+    "enable_api_monitoring": true
+  },
+  "filtering": {
+    "min_time_between_sends": 300,
+    "deduplicate_predictions": true,
+    "max_predictions_per_hour": 12
+  },
+  "logging": {
+    "log_file": "prediction_listener.log",
+    "log_level": "INFO"
+  }
+}
