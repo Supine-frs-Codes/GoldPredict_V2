@@ -1,0 +1,85 @@
+{
+  "data": {
+    "period": "2y",
+    "sources": ["yahoo"],
+    "update_frequency": 3600
+  },
+  "features": {
+    "use_technical_indicators": true,
+    "use_economic_indicators": false,
+    "lookback_days": 252
+  },
+  "preprocessing": {
+    "scaler_type": "standard",
+    "sequence_length": 60,
+    "remove_outliers": true
+  },
+  "model": {
+    "sequence_length": 60
+  },
+  "models": {
+    "types": ["lstm", "gru", "transformer"],
+    "lstm": {
+      "hidden_size": 256,
+      "num_layers": 3,
+      "dropout": 0.2,
+      "bidirectional": true
+    },
+    "gru": {
+      "hidden_size": 256,
+      "num_layers": 3,
+      "dropout": 0.2,
+      "bidirectional": true
+    },
+    "transformer": {
+      "d_model": 256,
+      "nhead": 16,
+      "num_layers": 6,
+      "dropout": 0.1
+    }
+  },
+  "ensemble": {
+    "method": "weighted_average"
+  },
+  "training": {
+    "train_split": 0.8,
+    "epochs": 150,
+    "batch_size": 32,
+    "learning_rate": 0.0005,
+    "early_stopping_patience": 25,
+    "n_jobs": -1,
+    "use_mixed_precision": true,
+    "gradient_accumulation_steps": 1,
+    "max_grad_norm": 1.0,
+    "warmup_steps": 500,
+    "scheduler": "cosine_annealing"
+  },
+  "gpu_optimization": {
+    "compile_model": true,
+    "use_flash_attention": false,
+    "tensor_parallel": false,
+    "gradient_checkpointing": true,
+    "memory_efficient_attention": true,
+    "pin_memory": true,
+    "non_blocking": true,
+    "dataloader_num_workers": 8
+  },
+  "rtx40_specific": {
+    "enable_cuda_graphs": false,
+    "use_torch_compile": true,
+    "compile_mode": "default",
+    "enable_tf32": true,
+    "enable_cudnn_benchmark": true,
+    "memory_pool": "native"
+  },
+  "prediction": {
+    "horizons": [1, 5, 10, 30],
+    "confidence_intervals": [0.8, 0.9, 0.95],
+    "uncertainty_samples": 500
+  },
+  "logging": {
+    "level": "INFO",
+    "log_gpu_memory": true,
+    "log_training_metrics": true
+  }
+}

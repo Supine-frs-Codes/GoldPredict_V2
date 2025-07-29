@@ -1,0 +1,7 @@
+{
+  "data_source": "mt5",
+  "time_period": "1d",
+  "model_type": "ensemble",
+  "cpu_cores": "auto",
+  "lookback_days": 30
+}

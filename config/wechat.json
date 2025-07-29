@@ -1,0 +1,7 @@
+{
+  "enabled": false,
+  "target_groups": [],
+  "send_conditions": {
+    "min_confidence": 0.8
+  }
+}

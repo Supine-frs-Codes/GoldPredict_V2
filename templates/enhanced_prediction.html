@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 增强预测系统 - 自适应AI预测引擎</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #ffd700, #ffb347);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .control-panel {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .control-panel h2 {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            text-align: center;
+        }
+        
+        .config-section {
+            margin-bottom: 20px;
+        }
+        
+        .config-section h3 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+            color: #ffd700;
+        }
+        
+        .config-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .config-row label {
+            flex: 1;
+            margin-right: 10px;
+        }
+        
+        .config-row input,
+        .config-row select {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            font-size: 1em;
+        }
+        
+        .config-row input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 5px;
+            font-size: 1em;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255,107,107,0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #74b9ff, #0984e3);
+            color: white;
+            box-shadow: 0 4px 15px rgba(116,185,255,0.4);
+        }
+        
+        .btn-success {
+            background: linear-gradient(45deg, #00b894, #00a085);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,184,148,0.4);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        .status-panel {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .status-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+        
+        .status-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #ffd700;
+        }
+        
+        .status-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        
+        .prediction-display {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .prediction-card {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        
+        .prediction-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            color: #ffd700;
+        }
+        
+        .price-display {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 15px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .signal-display {
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            margin: 15px 0;
+            font-size: 1.1em;
+        }
+        
+        .signal-bullish {
+            background: linear-gradient(45deg, #00b894, #00a085);
+        }
+        
+        .signal-bearish {
+            background: linear-gradient(45deg, #e17055, #d63031);
+        }
+        
+        .signal-neutral {
+            background: linear-gradient(45deg, #74b9ff, #0984e3);
+        }
+        
+        .confidence-container {
+            margin: 15px 0;
+        }
+        
+        .confidence-bar {
+            width: 100%;
+            height: 15px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #ffd700, #ffb347);
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+        
+        .chart-container {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+        
+        .chart-container h3 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #ffd700;
+        }
+        
+        .performance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .performance-card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .performance-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffd700;
+        }
+        
+        .performance-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        
+        .performance-trend {
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+        
+        .trend-up {
+            color: #00b894;
+        }
+        
+        .trend-down {
+            color: #e17055;
+        }
+        
+        .log-container {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 15px;
+            height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .log-entry {
+            margin-bottom: 8px;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .log-timestamp {
+            color: #74b9ff;
+            font-weight: bold;
+        }
+        
+        .log-info {
+            color: #00b894;
+        }
+        
+        .log-warning {
+            color: #fdcb6e;
+        }
+        
+        .log-error {
+            color: #e17055;
+        }
+        
+        .log-success {
+            color: #00b894;
+        }
+        
+        .weights-display {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .weight-item {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .weight-name {
+            font-size: 0.8em;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+        
+        .weight-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #ffd700;
+        }
+        
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .prediction-display {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: linear-gradient(45deg, #00b894, #00a085);
+        }
+        
+        .notification.error {
+            background: linear-gradient(45deg, #e17055, #d63031);
+        }
+        
+        .notification.info {
+            background: linear-gradient(45deg, #74b9ff, #0984e3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 增强预测系统</h1>
+            <p>自适应AI预测引擎 - 智能学习与优化</p>
+        </div>
+        
+        <!-- 主要控制面板 -->
+        <div class="main-grid">
+            <div class="control-panel">
+                <h2>⚙️ 系统控制</h2>
+                
+                <div class="config-section">
+                    <h3>🎯 预测配置</h3>
+                    <div class="config-row">
+                        <label>预测间隔 (分钟):</label>
+                        <select id="interval-minutes">
+                            <option value="1">1分钟</option>
+                            <option value="2">2分钟</option>
+                            <option value="5" selected>5分钟</option>
+                            <option value="10">10分钟</option>
+                            <option value="15">15分钟</option>
+                            <option value="30">30分钟</option>
+                        </select>
+                    </div>
+                    <div class="config-row">
+                        <label>数据收集间隔 (秒):</label>
+                        <select id="data-collection-seconds">
+                            <option value="1">1秒</option>
+                            <option value="2">2秒</option>
+                            <option value="5" selected>5秒</option>
+                            <option value="10">10秒</option>
+                        </select>
+                    </div>
+                    <div class="config-row">
+                        <label>最少数据点:</label>
+                        <select id="min-data-points">
+                            <option value="3">3个</option>
+                            <option value="5">5个</option>
+                            <option value="10" selected>10个</option>
+                            <option value="20">20个</option>
+                        </select>
+                    </div>
+                    <div class="config-row">
+                        <label>置信度阈值:</label>
+                        <input type="range" id="confidence-threshold" min="0.3" max="0.9" step="0.1" value="0.6">
+                        <span id="confidence-threshold-value">0.6</span>
+                    </div>
+                </div>
+                
+                <div class="config-section">
+                    <h3>🎮 引擎控制</h3>
+                    <div style="text-align: center;">
+                        <button class="btn btn-primary" onclick="startEngine()">🚀 启动引擎</button>
+                        <button class="btn btn-secondary" onclick="stopEngine()">⏹️ 停止引擎</button>
+                        <button class="btn btn-success" onclick="saveConfig()">💾 保存配置</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="status-panel">
+                <h2>📊 系统状态</h2>
+                <div class="status-grid">
+                    <div class="status-item">
+                        <div class="status-value" id="engine-status">未启动</div>
+                        <div class="status-label">引擎状态</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-value" id="data-points">0</div>
+                        <div class="status-label">数据点数</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-value" id="predictions-count">0</div>
+                        <div class="status-label">预测次数</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-value" id="connection-status">连接中...</div>
+                        <div class="status-label">连接状态</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 预测显示 -->
+        <div class="prediction-display">
+            <div class="prediction-card">
+                <h3>💰 当前价格</h3>
+                <div class="price-display" id="current-price">$--</div>
+                <div>实时MT5数据</div>
+                <div style="font-size: 0.9em; margin-top: 10px;">
+                    <span id="price-time">--</span>
+                </div>
+            </div>
+            
+            <div class="prediction-card">
+                <h3>🔮 AI预测</h3>
+                <div class="price-display" id="predicted-price">$--</div>
+                <div class="signal-display" id="trading-signal">等待预测</div>
+                <div class="confidence-container">
+                    <div>置信度: <span id="confidence-value">--%</span></div>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" id="confidence-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="prediction-card">
+                <h3>📈 价格变化</h3>
+                <div class="price-display" id="price-change">--</div>
+                <div id="price-change-pct">--%</div>
+                <div style="margin-top: 15px;">
+                    <div>下次预测: <span id="next-prediction">--</span></div>
+                    <div>目标时间: <span id="target-time">--</span></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 性能指标 -->
+        <div class="performance-grid">
+            <div class="performance-card">
+                <div class="performance-value" id="total-predictions">0</div>
+                <div class="performance-label">总预测数</div>
+                <div class="performance-trend" id="predictions-trend">--</div>
+            </div>
+            <div class="performance-card">
+                <div class="performance-value" id="average-accuracy">--%</div>
+                <div class="performance-label">平均准确率</div>
+                <div class="performance-trend" id="accuracy-trend">--</div>
+            </div>
+            <div class="performance-card">
+                <div class="performance-value" id="recent-accuracy">--%</div>
+                <div class="performance-label">近期准确率</div>
+                <div class="performance-trend" id="recent-trend">--</div>
+            </div>
+            <div class="performance-card">
+                <div class="performance-value" id="confidence-base">--%</div>
+                <div class="performance-label">基础置信度</div>
+                <div class="performance-trend" id="confidence-trend">--</div>
+            </div>
+        </div>
+        
+        <!-- 预测器权重显示 -->
+        <div class="chart-container">
+            <h3>🎯 预测器权重分布</h3>
+            <div class="weights-display" id="weights-display">
+                <div class="weight-item">
+                    <div class="weight-name">技术分析</div>
+                    <div class="weight-value" id="weight-technical">--%</div>
+                </div>
+                <div class="weight-item">
+                    <div class="weight-name">动量分析</div>
+                    <div class="weight-value" id="weight-momentum">--%</div>
+                </div>
+                <div class="weight-item">
+                    <div class="weight-name">波动率</div>
+                    <div class="weight-value" id="weight-volatility">--%</div>
+                </div>
+                <div class="weight-item">
+                    <div class="weight-name">模式识别</div>
+                    <div class="weight-value" id="weight-pattern">--%</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 图表容器 -->
+        <div class="chart-container">
+            <h3>📊 实时价格与预测图表</h3>
+            <div id="price-chart" style="height: 400px;"></div>
+        </div>
+        
+        <!-- 准确率历史图表 -->
+        <div class="chart-container">
+            <h3>📈 准确率历史趋势</h3>
+            <div id="accuracy-chart" style="height: 300px;"></div>
+        </div>
+        
+        <!-- 系统日志 -->
+        <div class="chart-container">
+            <h3>📝 系统日志</h3>
+            <div class="log-container" id="log-container">
+                <div class="log-entry">
+                    <span class="log-timestamp">[等待]</span>
+                    <span class="log-info">增强预测系统准备就绪</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 通知容器 -->
+    <div id="notification" class="notification"></div>
+    
+    <script>
+        // WebSocket连接
+        const socket = io('http://localhost:5002');
+        
+        // 全局变量
+        let priceData = [];
+        let predictionData = [];
+        let accuracyData = [];
+        let isEngineRunning = false;
+        
+        // WebSocket事件处理
+        socket.on('connect', function() {
+            addLog('WebSocket连接成功', 'success');
+            document.getElementById('connection-status').textContent = '已连接';
+            requestStatus();
+        });
+        
+        socket.on('disconnect', function() {
+            addLog('WebSocket连接断开', 'warning');
+            document.getElementById('connection-status').textContent = '已断开';
+        });
+        
+        socket.on('status_update', function(data) {
+            updateStatus(data);
+        });
+        
+        socket.on('new_prediction', function(data) {
+            updatePrediction(data);
+            addLog(`新预测: ${data.signal} $${data.predicted_price.toFixed(2)} (${(data.confidence*100).toFixed(1)}%)`, 'success');
+        });
+        
+        // 配置相关函数
+        function getConfig() {
+            return {
+                interval_minutes: parseInt(document.getElementById('interval-minutes').value),
+                data_collection_seconds: parseInt(document.getElementById('data-collection-seconds').value),
+                min_data_points: parseInt(document.getElementById('min-data-points').value),
+                confidence_threshold: parseFloat(document.getElementById('confidence-threshold').value),
+                auto_optimize: true
+            };
+        }
+        
+        function startEngine() {
+            const config = getConfig();
+            
+            addLog(`启动引擎: 间隔${config.interval_minutes}分钟, 收集${config.data_collection_seconds}秒`, 'info');
+            
+            fetch('/api/engine/start', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(config)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    addLog('自适应预测引擎启动成功', 'success');
+                    isEngineRunning = true;
+                } else {
+                    addLog(`启动失败: ${data.message}`, 'error');
+                }
+            })
+            .catch(error => {
+                addLog(`启动错误: ${error}`, 'error');
+            });
+        }
+        
+        function stopEngine() {
+            fetch('/api/engine/stop', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    addLog('预测引擎已停止', 'info');
+                    isEngineRunning = false;
+                } else {
+                    addLog(`停止失败: ${data.message}`, 'error');
+                }
+            })
+            .catch(error => {
+                addLog(`停止错误: ${error}`, 'error');
+            });
+        }
+        
+        function saveConfig() {
+            const config = getConfig();
+            
+            fetch('/api/config', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(config)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    addLog('配置已保存', 'success');
+                } else {
+                    addLog(`配置保存失败: ${data.message}`, 'error');
+                }
+            })
+            .catch(error => {
+                addLog(`配置错误: ${error}`, 'error');
+            });
+        }
+        
+        function requestStatus() {
+            socket.emit('request_status');
+        }
+        
+        function updateStatus(data) {
+            // 更新引擎状态
+            document.getElementById('engine-status').textContent = data.running ? '运行中' : '已停止';
+            document.getElementById('data-points').textContent = data.data_points || 0;
+            document.getElementById('predictions-count').textContent = data.predictions_count || 0;
+            
+            // 更新性能指标
+            const metrics = data.performance_metrics || {};
+            document.getElementById('total-predictions').textContent = metrics.total_predictions || 0;
+            document.getElementById('average-accuracy').textContent = 
+                metrics.average_accuracy ? `${(metrics.average_accuracy * 100).toFixed(1)}%` : '--%';
+            document.getElementById('recent-accuracy').textContent = 
+                metrics.recent_accuracy ? `${(metrics.recent_accuracy * 100).toFixed(1)}%` : '--%';
+            document.getElementById('confidence-base').textContent = 
+                data.confidence_base ? `${(data.confidence_base * 100).toFixed(1)}%` : '--%';
+            
+            // 更新预测器权重
+            if (data.predictor_weights) {
+                const weights = data.predictor_weights;
+                document.getElementById('weight-technical').textContent = `${(weights.technical * 100).toFixed(1)}%`;
+                document.getElementById('weight-momentum').textContent = `${(weights.momentum * 100).toFixed(1)}%`;
+                document.getElementById('weight-volatility').textContent = `${(weights.volatility * 100).toFixed(1)}%`;
+                document.getElementById('weight-pattern').textContent = `${(weights.pattern * 100).toFixed(1)}%`;
+            }
+            
+            // 更新准确率历史图表
+            if (data.accuracy_history && data.accuracy_history.length > 0) {
+                updateAccuracyChart(data.accuracy_history);
+            }
+        }
+        
+        function updatePrediction(data) {
+            // 更新价格显示
+            document.getElementById('current-price').textContent = `$${data.current_price.toFixed(2)}`;
+            document.getElementById('predicted-price').textContent = `$${data.predicted_price.toFixed(2)}`;
+            
+            // 更新时间
+            const currentTime = new Date(data.timestamp);
+            const targetTime = new Date(data.target_time);
+            document.getElementById('price-time').textContent = currentTime.toLocaleTimeString();
+            document.getElementById('target-time').textContent = targetTime.toLocaleTimeString();
+            
+            // 更新交易信号
+            const signalElement = document.getElementById('trading-signal');
+            signalElement.textContent = data.signal;
+            signalElement.className = 'signal-display';
+            
+            if (data.signal.includes('看涨')) {
+                signalElement.classList.add('signal-bullish');
+            } else if (data.signal.includes('看跌')) {
+                signalElement.classList.add('signal-bearish');
+            } else {
+                signalElement.classList.add('signal-neutral');
+            }
+            
+            // 更新置信度
+            const confidence = (data.confidence * 100).toFixed(1);
+            document.getElementById('confidence-value').textContent = `${confidence}%`;
+            document.getElementById('confidence-fill').style.width = `${confidence}%`;
+            
+            // 更新价格变化
+            const priceChange = data.predicted_price - data.current_price;
+            const priceChangePct = (priceChange / data.current_price * 100);
+            
+            document.getElementById('price-change').textContent = 
+                `${priceChange >= 0 ? '+' : ''}$${priceChange.toFixed(2)}`;
+            document.getElementById('price-change-pct').textContent = 
+                `${priceChangePct >= 0 ? '+' : ''}${priceChangePct.toFixed(3)}%`;
+            
+            // 更新图表
+            updatePriceChart(data);
+        }
+        
+        function updatePriceChart(data) {
+            // 添加数据点
+            priceData.push({
+                x: new Date(data.timestamp),
+                y: data.current_price
+            });
+            
+            predictionData.push({
+                x: new Date(data.target_time),
+                y: data.predicted_price
+            });
+            
+            // 保持最近100个数据点
+            if (priceData.length > 100) {
+                priceData.shift();
+                predictionData.shift();
+            }
+            
+            // 绘制图表
+            const trace1 = {
+                x: priceData.map(d => d.x),
+                y: priceData.map(d => d.y),
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: '实际价格',
+                line: {color: '#00b894', width: 2},
+                marker: {size: 4}
+            };
+            
+            const trace2 = {
+                x: predictionData.map(d => d.x),
+                y: predictionData.map(d => d.y),
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: '预测价格',
+                line: {color: '#e17055', dash: 'dash', width: 2},
+                marker: {size: 4}
+            };
+            
+            const layout = {
+                title: {
+                    text: '实时价格与AI预测',
+                    font: {color: 'white', size: 16}
+                },
+                xaxis: {
+                    title: '时间',
+                    color: 'white',
+                    gridcolor: 'rgba(255,255,255,0.2)'
+                },
+                yaxis: {
+                    title: '价格 ($)',
+                    color: 'white',
+                    gridcolor: 'rgba(255,255,255,0.2)'
+                },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                font: {color: 'white'},
+                legend: {
+                    font: {color: 'white'}
+                }
+            };
+            
+            Plotly.newPlot('price-chart', [trace1, trace2], layout, {responsive: true});
+        }
+        
+        function updateAccuracyChart(accuracyHistory) {
+            const trace = {
+                y: accuracyHistory,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: '准确率',
+                line: {color: '#ffd700', width: 3},
+                marker: {size: 6}
+            };
+            
+            const layout = {
+                title: {
+                    text: '预测准确率趋势',
+                    font: {color: 'white', size: 16}
+                },
+                xaxis: {
+                    title: '预测序号',
+                    color: 'white',
+                    gridcolor: 'rgba(255,255,255,0.2)'
+                },
+                yaxis: {
+                    title: '准确率',
+                    color: 'white',
+                    gridcolor: 'rgba(255,255,255,0.2)',
+                    range: [0, 1]
+                },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                font: {color: 'white'}
+            };
+            
+            Plotly.newPlot('accuracy-chart', [trace], layout, {responsive: true});
+        }
+        
+        function addLog(message, type = 'info') {
+            const logContainer = document.getElementById('log-container');
+            const timestamp = new Date().toLocaleTimeString();
+            
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log-entry';
+            logEntry.innerHTML = `
+                <span class="log-timestamp">[${timestamp}]</span>
+                <span class="log-${type}">${message}</span>
+            `;
+            
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+            
+            // 保持最近100条日志
+            while (logContainer.children.length > 100) {
+                logContainer.removeChild(logContainer.firstChild);
+            }
+            
+            // 显示通知
+            showNotification(message, type);
+        }
+        
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            addLog('增强预测系统界面加载完成', 'success');
+            
+            // 置信度阈值滑块事件
+            const confidenceSlider = document.getElementById('confidence-threshold');
+            const confidenceValue = document.getElementById('confidence-threshold-value');
+            
+            confidenceSlider.addEventListener('input', function() {
+                confidenceValue.textContent = this.value;
+            });
+            
+            // 定期请求状态更新
+            setInterval(requestStatus, 10000); // 每10秒请求一次状态
+            
+            // 加载保存的配置
+            loadConfig();
+        });
+        
+        function loadConfig() {
+            fetch('/api/config')
+            .then(response => response.json())
+            .then(config => {
+                document.getElementById('interval-minutes').value = config.interval_minutes || 5;
+                document.getElementById('data-collection-seconds').value = config.data_collection_seconds || 5;
+                document.getElementById('min-data-points').value = config.min_data_points || 10;
+                document.getElementById('confidence-threshold').value = config.confidence_threshold || 0.6;
+                document.getElementById('confidence-threshold-value').textContent = config.confidence_threshold || 0.6;
+                
+                addLog('配置已加载', 'info');
+            })
+            .catch(error => {
+                addLog(`加载配置失败: ${error}`, 'error');
+            });
+        }
+    </script>
+</body>
+</html>

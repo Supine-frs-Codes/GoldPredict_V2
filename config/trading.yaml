@@ -1,0 +1,2 @@
+# trading.yaml - 请手动配置
+{'trading': {'enabled': False, 'symbol': 'XAUUSD'}, 'risk_management': {'max_position_size': 0.1}}

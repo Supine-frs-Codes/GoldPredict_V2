@@ -1,0 +1,18 @@
+{
+  "alpha_vantage": {
+    "api_key": "YOUR_ALPHA_VANTAGE_API_KEY",
+    "note": "\u514d\u8d39\u8d26\u6237\u6bcf\u5206\u949f5\u6b21\u8bf7\u6c42\uff0c\u6bcf\u5929500\u6b21\u8bf7\u6c42"
+  },
+  "iex_cloud": {
+    "api_key": "YOUR_IEX_CLOUD_API_KEY",
+    "note": "\u514d\u8d39\u8d26\u6237\u6bcf\u6708100,000\u6b21\u8bf7\u6c42"
+  },
+  "finnhub": {
+    "api_key": "YOUR_FINNHUB_API_KEY",
+    "note": "\u514d\u8d39\u8d26\u6237\u6bcf\u5206\u949f60\u6b21\u8bf7\u6c42"
+  },
+  "polygon": {
+    "api_key": "YOUR_POLYGON_API_KEY",
+    "note": "\u514d\u8d39\u8d26\u6237\u6bcf\u5206\u949f5\u6b21\u8bf7\u6c42"
+  }
+}

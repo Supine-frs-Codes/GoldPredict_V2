@@ -1,0 +1,2 @@
+# config.yaml - 请手动配置
+{'system': {'name': 'GoldPredict V2.0', 'debug': False}, 'data_sources': {'primary': 'mt5', 'update_interval': 30}, 'prediction': {'lookback_days': 30, 'confidence_threshold': 0.7}, 'models': {'traditional_ml': {'enabled': True}}}

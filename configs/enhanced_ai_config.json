@@ -1,0 +1,14 @@
+{
+  "core": {
+    "interval_minutes": 5,
+    "data_collection_seconds": 5,
+    "min_data_points": 10,
+    "auto_optimize": true
+  },
+  "optional_features": {
+    "advanced_technical": true,
+    "deep_learning": true,
+    "gpu_acceleration": false,
+    "sentiment_analysis": false
+  }
+}
