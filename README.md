@@ -111,7 +111,7 @@ GoldPredict V2.0 架构图
 
 ```bash
 # 1. 克隆项目
-git clone https://github.com/goldpredict/goldpredict.git
+git clone https://github.com/Supine-frs-Codes/GoldPredict_V2.git
 cd goldpredict
 
 # 2. 安装uv包管理器 (如果未安装)
@@ -145,7 +145,7 @@ cd goldpredict-workspace
 #### **步骤2: 项目安装**
 ```bash
 # 克隆项目
-git clone https://github.com/goldpredict/goldpredict.git
+git clone https://github.com/Supine-frs-Codes/GoldPredict_V2.git
 cd goldpredict
 
 # 安装核心依赖
