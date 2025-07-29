@@ -1,7 +1,7 @@
 # 🏆 GoldPredict V2.0 - 智能黄金价格预测系统
 
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://python.org)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![License](https://img.shields.io/github/license/Supine-frs-Codes/GoldPredict_V2)](LICENSE)
 [![Version](https://img.shields.io/badge/version-2.0.0-orange.svg)](CHANGELOG.md)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/Supine-frs-Codes/GoldPredict_V2)
 
